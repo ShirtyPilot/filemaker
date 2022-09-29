@@ -12,6 +12,8 @@ CERTBOT_HOSTNAME = "fm.testes.works"
 HOSTNAME = "filemaker19"
 TIMEZONE = "Australia/Melbourne"
 GLANCES = "Yes"
+ASSISTED_INSTALL = "Yes"
+ASSISTED_PATH = "/home/ubuntu/fminstall/Assisted Install.txt"
 FM_ADMIN = "admin"
 FM_PASSWORD = "mnbmnb"
 FM_PIN = "7176"
@@ -81,10 +83,16 @@ fi
 touch .filemaker-downloaded
 
 if [ ! -f .filemaker-installed ]; then
-  if [ ! sudo apt install ./filemaker-server*.deb ]; then
-    echo "Error installing Filemaker"
-    exit 9
-  fi
+  if [ "$ASSISTED_INSTALL" = "Yes" ]; then
+    if [ ! sudo FM_ASSISTED_INSTALL=$ASSISTED_PATH apt install ./filemaker-server*.deb ]; then
+      echo "Error installing Filemaker"
+      exit 9
+  else
+    if [ ! sudo apt install ./filemaker-server*.deb ]; then
+      echo "Error installing Filemaker"
+      exit 9
+    fi
+   fi
 fi
 touch .filemaker-installed
 
